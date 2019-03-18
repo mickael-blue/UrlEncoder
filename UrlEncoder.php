@@ -1,5 +1,5 @@
 <?php
-namespace \url_encoder;
+namespace UrlEncoder;
 /**
  * UrlEncoder
  * Classe de cryptage principalement pour crypter des données à transmettre en paramètre d'url,
