@@ -7,7 +7,7 @@
         }
     ],
     "require": {
-        "ext-mcrypt": "*",
+        //"ext-mcrypt": "*",
         "ext-json": "*"
     }
 }
