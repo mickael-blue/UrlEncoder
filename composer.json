@@ -1,0 +1,10 @@
+{
+    "name": "url_encoder/url_encoder",
+    "authors": [
+        {
+            "name": "Mix",
+            "email": "darras.mickael@gmail.com"
+        }
+    ],
+    "require": {}
+}
