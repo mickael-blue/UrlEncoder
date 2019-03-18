@@ -1,14 +1,35 @@
 {
     "name": "miixdev/url-encoder",
+    "type": "library",
+    "description": "Crypt & decrypt urls parameters",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "encoder",
+        "mcrypt"
+    ],
     "authors": [
         {
-            "name": "Mix",
-            "email": "darras.mickael@gmail.com"
+            "name": "Thomas Parodi"
+        },
+        {
+            "name": "Mickaël Darras"
         }
     ],
     "minimum-stability": "dev",
     "require": {
+        "php": ">=5.4",
         "ext-json": "*",
         "ext-mcrypt": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpParser\\": "lib/PhpParser"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpParser\\": "test/PhpParser/"
+        }
     }
 }
