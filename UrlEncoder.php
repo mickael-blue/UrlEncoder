@@ -174,7 +174,7 @@ class UrlEncoder {
     /**
      * cryptage de texte/tableau/objet (la variable est d'abord encodée json)
      *
-     * @param string $params
+     * @param object $params
      * @return string
      */
 	public function encode($params){
