@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpParser\\": "lib/PhpParser"
+            "UrlEncoder\\": "lib/UrlEncoder"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpParser\\": "test/PhpParser/"
+            "UrlEncoder\\": "test/UrlEncoder/"
         }
     }
 }
