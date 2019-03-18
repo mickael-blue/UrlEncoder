@@ -29,9 +29,9 @@ namespace UrlEncoder;
  */
 class UrlEncoder {
 	// grain de Sel
-	private $iv = '';
+	private $iv = '1234567890123456789012345678901234567890';
 	// clé privée
-	private $key = '';
+	private $key = '1234567890123456789012345678901234567890';
 	// algorithme de cryptage (correspondant aux algorithmes disponibles de mcrypt )
 	private $algorithm = 'rijndael-256';
 	// mode de cryptage
@@ -174,18 +174,20 @@ class UrlEncoder {
     /**
      * cryptage de texte/tableau/objet (la variable est d'abord encodée json)
      *
-     * @param object $params
+     * @param object|array|string $params
      * @return string
      */
 	public function encode($params){
 		return $this->crypt(json_encode($params));
 	}
-	/**
-	 * décryptage de texte/tableau/objet (la variable est d'abord décodée json)
-	 * 
-	 * @param object $text
-	 * @return mixed
-	 */
+
+    /**
+     * décryptage de texte/tableau/objet (la variable est d'abord décodée json)
+     *
+     * @param object|string $text
+     * @param bool $assoc
+     * @return mixed
+     */
 	public function decode($text, $assoc = true){
 		return json_decode(trim($this->decrypt($text)), $assoc);
 	}
@@ -197,4 +199,3 @@ class UrlEncoder {
 		return array();
 	}
 }
-?>
