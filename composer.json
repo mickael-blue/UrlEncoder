@@ -8,7 +8,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php-json": "*",
-        "php-mcrypt": "*"
+        "ext-json": "*",
+        "ext-mcrypt": "*"
     }
 }
