@@ -6,8 +6,8 @@
             "email": "darras.mickael@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
-        //"ext-mcrypt": "*",
         "ext-json": "*"
     }
 }
