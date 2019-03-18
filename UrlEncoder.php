@@ -1,4 +1,5 @@
 <?php
+namespace \url_encoder;
 /**
  * UrlEncoder
  * Classe de cryptage principalement pour crypter des données à transmettre en paramètre d'url,
@@ -37,18 +38,19 @@ class UrlEncoder {
 	private $mode = MCRYPT_MODE_ECB;
 
 	private $no_mcrypt = false;
-	/**
-	 * Mode de cryptage
-	 * 
-	 * config => array(
-	 *		'key' => 'lkaqlkj lkj%;dflsdjflsdsjfdlsdfsd ff65468ze', // la longueur dépend de l'algo utilisé
-	 *		'iv' => 'zezolnsdlflknsdf*ùkn', // la longueur dépend de l'algo utilisé
-	 *		'algorithm' => 'rijndael-256',
-	 *	)
-	 * 
-	 * @param object $config
-	 * @return UrlEncoder
-	 */
+
+    /**
+     * Mode de cryptage
+     *
+     * config => array(
+     *        'key' => 'lkaqlkj lkj%;dflsdjflsdsjfdlsdfsd ff65468ze', // la longueur dépend de l'algo utilisé
+     *        'iv' => 'zezolnsdlflknsdf*ùkn', // la longueur dépend de l'algo utilisé
+     *        'algorithm' => 'rijndael-256',
+     *    )
+     *
+     * @param object $config
+     * @throws Exception
+     */
 	public function __construct($config){
 		$this->no_mcrypt = !function_exists('mcrypt_encrypt');
 		if(isset($config['force_no_mcrypt']) && $config['force_no_mcrypt']){
@@ -167,14 +169,14 @@ class UrlEncoder {
 			$newstr .= chr($neword);
 		}
 		return base64_encode($newstr);
-	}	
-	
-	/**
-	 * cryptage de texte/tableau/objet (la variable est d'abord encodée json)
-	 * 
-	 * @param object $text
-	 * @return string
-	 */
+	}
+
+    /**
+     * cryptage de texte/tableau/objet (la variable est d'abord encodée json)
+     *
+     * @param string $params
+     * @return string
+     */
 	public function encode($params){
 		return $this->crypt(json_encode($params));
 	}
