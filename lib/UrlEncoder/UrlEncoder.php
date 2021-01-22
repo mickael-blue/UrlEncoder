@@ -55,7 +55,7 @@ class UrlEncoder {
 		if (isset($config['algorithm']) && !empty($config['algorithm'])){
 			$algorithms = openssl_get_cipher_methods();
 			if (!in_array($config['algorithm'], $algorithms)){
-				throw new Exception('Algorithme de cryptage incorrect: '.$config['algorithm']);
+				//throw new Exception('Algorithme de cryptage incorrect: '.$config['algorithm']);
 			}
 			$this->algorithm = $config['algorithm'];
 		}
