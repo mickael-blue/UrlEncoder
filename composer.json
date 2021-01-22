@@ -5,8 +5,7 @@
     "license": "MIT",
     "keywords": [
         "php",
-        "encoder",
-        "mcrypt"
+        "encoder"
     ],
     "authors": [
         {
@@ -20,7 +19,7 @@
     "require": {
         "php": ">=5.4",
         "ext-json": "*",
-        "ext-mcrypt": "*"
+        "ext-openssl": "*"
     },
     "autoload": {
         "psr-4": {

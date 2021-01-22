@@ -33,9 +33,9 @@ class UrlEncoder {
 	// clé privée
 	private $key = '1234567890123456789012345678901234567890';
 	// algorithme de cryptage (correspondant aux algorithmes disponibles de mcrypt )
-	private $algorithm = 'rijndael-256';
-	// mode de cryptage
-	private $mode = MCRYPT_MODE_ECB;
+	private $algorithm = 'blowfish';
+
+	private $mode = OPENSSL_RAW_DATA;
 
 	private $no_mcrypt = false;
 
@@ -52,25 +52,12 @@ class UrlEncoder {
      * @throws Exception
      */
 	public function __construct($config){
-		$this->no_mcrypt = !function_exists('mcrypt_encrypt');
-		if(isset($config['force_no_mcrypt']) && $config['force_no_mcrypt']){
-			$this->no_mcrypt = true;
-		}
-		if (!$this->no_mcrypt){
-			if (isset($config['algorithm']) && !empty($config['algorithm'])){
-				$algorithms = mcrypt_list_algorithms();
-				if (!in_array($config['algorithm'], $algorithms)){
-					throw new Exception('Algorithme de cryptage incorrect: '.$config['algorithm']);
-				}
-				$this->algorithm = $config['algorithm'];
+		if (isset($config['algorithm']) && !empty($config['algorithm'])){
+			$algorithms = openssl_get_cipher_methods();
+			if (!in_array($config['algorithm'], $algorithms)){
+				throw new Exception('Algorithme de cryptage incorrect: '.$config['algorithm']);
 			}
-			if (isset($config['mode']) && !empty($config['mode'])){
-				$modes = mcrypt_list_modes();
-				if (!in_array($config['mode'], $modes)){
-					throw new Exception('Mode de cryptage incorrect: '.$config['mode']);
-				}
-				$this->mode = $config['mode'];
-			}
+			$this->algorithm = $config['algorithm'];
 		}
 //			throw new Exception('La librairie MCRYPT n\'est pas installée.');
 		if (isset($config['iv']) && !empty($config['iv'])){
@@ -82,24 +69,13 @@ class UrlEncoder {
 	}
 	
 	public function setKey($key){
-		if (!$this->no_mcrypt){
-		    $key_size = mcrypt_get_key_size($this->algorithm, $this->mode);
-			if (strlen($key) > $key_size){
-				$key = substr($key, 0, $key_size);
-			}
-		}
 		$this->key = $key;
 	}
 
 	public function setIv($iv){
-		if (!$this->no_mcrypt){
-		    $iv_size = mcrypt_get_iv_size($this->algorithm, $this->mode);
-			if (strlen($iv) > $iv_size){
-				$iv = substr($iv, 0, $iv_size);
-			}
-		}
 		$this->iv = $iv;
 	}
+
 	/**
 	 * cryptage de texte
 	 * 
@@ -107,15 +83,13 @@ class UrlEncoder {
 	 * @return string
 	 */
 	public function crypt($text){
-		if (!$this->no_mcrypt){
-			return str_replace(
-				array('/', '=', '+'),
-				array('-','_','$'),
-				base64_encode(mcrypt_encrypt($this->algorithm, $this->key, $text, $this->mode, $this->iv))
-			);
-		}
-		return $this->_no_mcrypt_crypt($text);
+		return str_replace(
+			array('/', '=', '+'),
+			array('-','_','$'),
+			base64_encode(openssl_encrypt($text, $this->algorithm, $this->key, $this->mode, $this->iv))
+		);
 	}
+
 	/**
 	 * décryptage de texte
 	 * 
@@ -123,52 +97,11 @@ class UrlEncoder {
 	 * @return string
 	 */
 	public function decrypt($text){
-		if (!$this->no_mcrypt){
-			return mcrypt_decrypt($this->algorithm, $this->key, base64_decode(str_replace(
+			return openssl_decrypt(base64_decode(str_replace(
 				array('-','_','$'),
 				array('/', '=', '+'),
 				$text
-			)), $this->mode, $this->iv);
-		}
-		return $this->_no_mcrypt_decrypt($text);
-	}
-	function _no_mcrypt_decrypt($text){
-		$key = md5($this->key);
-		$letter = -1;
-		$newstr = '';
-		$text = base64_decode($text);
-		$strlen = strlen($text);
-		for ( $i = 0; $i < $strlen; $i++ ){
-			$letter++;
-			if ( $letter > 31 ){
-				$letter = 0;
-			}
-			$neword = ord($text{$i}) - ord($key{$letter});
-			if ( $neword < 1 ){
-				$neword += 256;
-			}
-			$newstr .= chr($neword);
-		}
-		return $newstr;
-	}
-	
-	function _no_mcrypt_crypt($text){
-		$key = md5($this->key);
-		$letter = -1;
-		$newstr = '';
-		$strlen = strlen($text);
-		for($i = 0; $i < $strlen; $i++ ){
-			$letter++;
-			if ( $letter > 31 ){
-				$letter = 0;
-			}
-			$neword = ord($text{$i}) + ord($key{$letter});
-			if ( $neword > 255 ){
-				$neword -= 256;
-			}
-			$newstr .= chr($neword);
-		}
-		return base64_encode($newstr);
+			)), $this->algorithm, $this->key, $this->mode, $this->iv);
 	}
 
     /**
@@ -192,10 +125,4 @@ class UrlEncoder {
 		return json_decode(trim($this->decrypt($text)), $assoc);
 	}
 	
-	public function listAlgos(){
-		if (!$this->no_mcrypt){
-			return mcrypt_list_algorithms();
-		}
-		return array();
-	}
 }
